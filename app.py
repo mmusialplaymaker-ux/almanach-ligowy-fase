@@ -521,7 +521,9 @@ def build(_stats, _matches):
     # premia kontekstowa (kolumna „Premia”; w trybie standard wchodzi do PM Index)
     sm = df["senior_minutes"].fillna(0)
     sq = df["senior_squad_apps"].fillna(0)
-    df["gra_ze_starszymi"] = (df["_jun_older"] | (sm > 0)).astype(bool)
+    # "↑ ze starszymi" = TYLKO starsza kategoria JUNIORSKA niż własna.
+    # Gra w seniorach to osobny znacznik (⚽), nie „ze starszymi".
+    df["gra_ze_starszymi"] = df["_jun_older"].astype(bool)
     df["PM_premia"] = (df["gra_ze_starszymi"].astype(float) * B_UP
                        + (sm > 0).astype(float) * B_SEN_PLAYED
                        + ((sm == 0) & (sq > 0)).astype(float) * B_SEN_SQUAD)
